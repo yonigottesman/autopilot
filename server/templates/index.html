@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <link rel="icon" href="{{ url_for('static', filename = 'favicon.ico') }}">
+  <title>Mini Autopilot</title>
+
+  <!-- Socket IO
+  ================================================== -->
+  <script type="text/javascript"
+    src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.2.0/socket.io.js">
+  </script>
+
+
+</head>
+
+<body class="tos-bg">
+
+
+  <div class="container" min-width= "1024px" width="100%">
+    <div>
+      <h1>mini autopilot</h1>
+    </div>
+
+    <div>
+      <div style="width: 70%">
+        <img id="streamer-image" src="">
+      </div>
+    </div>
+  </div>
+  
+</body>
+</html>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function(event) {
+    const image_elem = document.getElementById("streamer-image");
+    const text_elem = document.getElementById("streamer-text");
+
+    var socket = io.connect('http://' + document.domain + ':' + location.port + '/web', {
+      reconnection: false
+    });
+
+    socket.on('connect', () => {
+      console.log('Connected');
+    });
+
+    socket.on('disconnect', () => {
+      console.log('Disconnected');
+    });
+
+    socket.on('connect_error', (error) => {
+      console.log('Connect error! ' + error);
+    });
+
+    socket.on('connect_timeout', (error) => {
+      console.log('Connect timeout! ' + error);
+    });
+
+    socket.on('error', (error) => {
+      console.log('Error! ' + error);
+    });
+
+    // Update image and text data based on incoming data messages
+    socket.on('server2web', (msg) => {
+      image_elem.src = msg.image;
+    });
+  });
+</script>
